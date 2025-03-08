@@ -3,22 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Investment Simulator Calculator</title>
+    <title>Stock & ETF Investment Simulator</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-            line-height: 1.6;
+            background-color: #f8fafc;
+        }
+        
+        h1, h2, h3 {
+            color: #1e293b;
+            margin-top: 0;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        h2 {
+            font-size: 22px;
+            margin: 20px 0 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        h3 {
+            font-size: 18px;
+            margin: 15px 0 8px;
         }
         
         .calculator {
-            background-color: #f5f5f5;
-            border-radius: 8px;
+            background-color: #ffffff;
+            border-radius: 10px;
             padding: 20px;
             margin: 20px 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
         .input-group {
@@ -29,77 +54,127 @@
         label {
             display: block;
             margin-bottom: 5px;
-            font-weight: bold;
+            font-weight: 600;
+            color: #334155;
         }
         
         input {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
             font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
         
         button {
-            background-color: #4CAF50;
+            background-color: #3b82f6;
             color: white;
             border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
+            padding: 12px 15px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 16px;
+            width: 100%;
             margin-top: 10px;
+            font-weight: 600;
+            transition: all 0.2s ease;
         }
         
         button:hover {
-            background-color: #45a049;
+            background-color: #2563eb;
+            transform: translateY(-1px);
+        }
+        
+        .reset {
+            background-color: #ef4444;
+            margin-top: 10px;
+        }
+        
+        .reset:hover {
+            background-color: #dc2626;
         }
         
         .results {
-            margin-top: 20px;
-            border-top: 1px solid #ddd;
+            margin-top: 25px;
             padding-top: 15px;
+            display: none;
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.1);
         }
         
         th, td {
-            border: 1px solid #ddd;
+            border: 1px solid #e2e8f0;
             padding: 12px;
             text-align: left;
         }
         
         th {
-            background-color: #f2f2f2;
-            font-weight: bold;
+            background-color: #f1f5f9;
+            font-weight: 600;
+            color: #334155;
         }
         
         tr:nth-child(even) {
-            background-color: #f9f9f9;
+            background-color: #f8fafc;
+        }
+        
+        .highlight {
+            background-color: #dbeafe;
+            font-weight: 600;
         }
         
         .metric {
-            font-weight: bold;
+            font-weight: 600;
+            color: #334155;
         }
         
-        .reset {
-            background-color: #f44336;
+        .summary-box {
+            background-color: #f0fdf4;
+            border-left: 4px solid #22c55e;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .heading-with-line {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: #475569;
+            font-weight: 600;
+        }
+        
+        .heading-with-line:before, .heading-with-line:after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid #cbd5e1;
+        }
+        
+        .heading-with-line:before {
+            margin-right: 10px;
+        }
+        
+        .heading-with-line:after {
             margin-left: 10px;
-        }
-        
-        .reset:hover {
-            background-color: #e53935;
         }
         
         .company-info {
             margin-top: 5px;
-            padding: 10px;
-            background-color: #e8f4f8;
-            border-radius: 4px;
+            padding: 15px;
+            background-color: #f1f5f9;
+            border-radius: 8px;
             display: none;
         }
         
@@ -110,35 +185,42 @@
         
         .current-price {
             font-size: 16px;
-            color: #1565C0;
+            color: #2563eb;
+            margin-top: 5px;
         }
         
         .price-change {
             font-size: 14px;
+            margin-top: 5px;
         }
         
         .positive {
-            color: #4CAF50;
+            color: #10b981;
         }
         
         .negative {
-            color: #F44336;
+            color: #ef4444;
         }
         
         .loading {
-            margin-top: 5px;
-            font-style: italic;
-            color: #666;
+            text-align: center;
+            padding: 10px;
             display: none;
         }
         
-        .fetch-btn {
-            background-color: #2196F3;
-            margin-top: 5px;
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid #3b82f6;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
         }
         
-        .fetch-btn:hover {
-            background-color: #0b7dda;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         
         .input-with-button {
@@ -147,56 +229,108 @@
         
         .input-with-button input {
             flex: 1;
-            border-radius: 4px 0 0 4px;
+            border-radius: 6px 0 0 6px;
         }
         
         .input-with-button button {
             margin-top: 0;
-            border-radius: 0 4px 4px 0;
+            border-radius: 0 6px 6px 0;
+            width: auto;
+            white-space: nowrap;
         }
         
-        .refresh-price {
-            font-size: 14px;
-            margin-left: 10px;
-            cursor: pointer;
-            color: #2196F3;
+        .fetch-btn {
+            background-color: #2563eb;
+        }
+        
+        .fetch-btn:hover {
+            background-color: #1d4ed8;
+        }
+        
+        .symbol-type {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 8px;
+            color: white;
+        }
+        
+        .type-stock {
+            background-color: #3b82f6;
+        }
+        
+        .type-etf {
+            background-color: #8b5cf6;
         }
         
         .price-timestamp {
             font-size: 12px;
-            color: #666;
+            color: #64748b;
             font-style: italic;
-            margin-top: 3px;
+            margin-top: 5px;
         }
         
-        .highlight {
-            background-color: #e6f7ff;
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            margin-left: 5px;
+            cursor: help;
+        }
+        
+        .tooltip .tooltip-icon {
+            color: #3b82f6;
             font-weight: bold;
+            background-color: #dbeafe;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
         }
         
-        .simulation-result {
-            font-size: 18px;
-            margin: 15px 0;
-            padding: 15px;
-            background-color: #e8f5e9;
-            border-radius: 8px;
-            border-left: 5px solid #4CAF50;
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: #334155;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 14px;
+            font-weight: normal;
+        }
+        
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
         }
     </style>
 </head>
 <body>
-    <h1>Investment Simulator Calculator</h1>
+    <h1>Stock & ETF Investment Simulator</h1>
     
     <div class="calculator">
-        <h2>Step 1: Select Stock</h2>
-        
         <div class="input-group">
-            <label for="ticker">Stock Ticker Symbol:</label>
+            <label for="ticker">Symbol (Stock or ETF):</label>
             <div class="input-with-button">
-                <input type="text" id="ticker" placeholder="e.g., COST" autocomplete="off">
-                <button class="fetch-btn" onclick="fetchStockData()">Fetch Data</button>
+                <input type="text" id="ticker" placeholder="e.g., AAPL, SPY, QQQ" autocomplete="off">
+                <button class="fetch-btn" onclick="fetchMarketData()">Fetch Data</button>
             </div>
-            <div id="loading" class="loading">Loading stock data...</div>
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p>Loading market data...</p>
+            </div>
             <div id="companyInfo" class="company-info">
                 <div id="companyName" class="company-name"></div>
                 <div id="currentPrice" class="current-price"></div>
@@ -206,52 +340,53 @@
         </div>
         
         <div class="input-group">
-            <label for="stockPrice">Manual Stock Price ($):</label>
+            <label for="stockPrice">Manual Price ($):</label>
             <input type="number" id="stockPrice" step="0.01" min="0" placeholder="Use this if fetch data doesn't work">
         </div>
         
-        <h2>Step 2: Simulation Details</h2>
+        <div class="heading-with-line">Investment Details</div>
         
         <div class="input-group">
             <label for="investmentAmount">Investment Amount ($):</label>
             <input type="number" id="investmentAmount" step="1000" min="0" placeholder="e.g., 30000">
+            <div class="tooltip">
+                <span class="tooltip-icon">?</span>
+                <span class="tooltip-text">Enter the amount you plan to invest</span>
+            </div>
         </div>
         
         <div class="input-group">
             <label for="targetProfit">Target Profit ($):</label>
             <input type="number" id="targetProfit" step="100" min="0" placeholder="e.g., 500">
+            <div class="tooltip">
+                <span class="tooltip-icon">?</span>
+                <span class="tooltip-text">Enter how much profit you aim to make</span>
+            </div>
         </div>
         
-        <button onclick="simulateInvestment()">Simulate Investment</button>
+        <button onclick="simulateInvestment()">Calculate</button>
         <button onclick="resetForm()" class="reset">Reset</button>
         
-        <div class="results" id="simulationResults" style="display: none;">
-            <h2>Investment Simulation Results</h2>
+        <div id="results" class="results">
+            <div class="summary-box" id="sharesResult"></div>
             
-            <div class="simulation-result" id="sharesResult"></div>
-            
+            <h3>Investment Summary</h3>
             <div id="simulationSummary"></div>
             
-            <h2>Target Prices</h2>
+            <h3>Target Prices for Different Profit Goals</h3>
             <table id="targetTable">
                 <thead>
                     <tr>
                         <th>Target Profit ($)</th>
                         <th>Required Price ($)</th>
                         <th>Price Increase ($)</th>
-                        <th>Price Increase (%)</th>
+                        <th>Increase (%)</th>
                     </tr>
                 </thead>
                 <tbody id="targetBody">
-                    <!-- Table rows will be added here by JavaScript -->
+                    <!-- Table rows will be added here -->
                 </tbody>
             </table>
-            
-            <div id="additionalInfo" style="margin-top: 20px;">
-                <h3>What This Means</h3>
-                <p>This simulation shows how much the stock price needs to increase to reach your profit target based on your investment amount.</p>
-                <p>The lower the required price increase percentage, the easier it may be to reach your profit goal.</p>
-            </div>
         </div>
     </div>
     
@@ -259,12 +394,22 @@
         // API key for Alpha Vantage (free tier)
         const API_KEY = "PKW2CDTLQNZKNBVD";
         
-        // Fetch stock data from Alpha Vantage API
-        async function fetchStockData() {
+        // List of common ETFs for better detection
+        const commonETFs = [
+            'SPY', 'QQQ', 'IVV', 'VTI', 'VOO', 'IWM', 'EFA', 'AGG', 'VEA', 'VWO',
+            'BND', 'VIG', 'IJH', 'VGT', 'XLF', 'XLE', 'VYM', 'IEFA', 'VB', 'XLK',
+            'IEMG', 'VUG', 'IJR', 'VO', 'VEU', 'VXUS', 'XLV', 'VTV', 'VCIT', 'VCSH',
+            'LQD', 'XLI', 'USMV', 'ITOT', 'MUB', 'XLP', 'GLD', 'IEF', 'TLT', 'SCHD',
+            'SHY', 'IAU', 'JPST', 'IWF', 'SCHX', 'DVY', 'DIA', 'IWD', 'GOVT', 'SCHF',
+            'VV', 'IWB', 'BSV', 'SPLG', 'SCHA', 'ARKK', 'TQQQ', 'SPDW', 'SPEM', 'SPAB'
+        ];
+        
+        // Fetch stock or ETF data from Alpha Vantage API
+        async function fetchMarketData() {
             const ticker = document.getElementById('ticker').value.trim().toUpperCase();
             
             if (!ticker) {
-                alert('Please enter a stock ticker symbol');
+                alert('Please enter a stock or ETF symbol.');
                 return;
             }
             
@@ -273,29 +418,71 @@
             document.getElementById('companyInfo').style.display = 'none';
             
             try {
-                // Fetch company overview
-                const overviewUrl = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${ticker}&apikey=${API_KEY}`;
-                const overviewResponse = await fetch(overviewUrl);
-                const overviewData = await overviewResponse.json();
+                // First try to determine if it's an ETF
+                let isETF = false;
+                let entityName = ticker;
+                let symbolType = "";
                 
-                // Fetch current price
+                // Check if it's a common ETF
+                if (commonETFs.includes(ticker) || ticker.startsWith('X') || ticker.includes('-')) {
+                    isETF = true;
+                    symbolType = "etf";
+                    
+                    // For ETFs, we can either use a simple name or try to fetch the full name
+                    if (ticker === "SPY") entityName = "SPDR S&P 500 ETF Trust";
+                    else if (ticker === "QQQ") entityName = "Invesco QQQ Trust";
+                    else if (ticker === "IVV") entityName = "iShares Core S&P 500 ETF";
+                    else if (ticker === "VTI") entityName = "Vanguard Total Stock Market ETF";
+                    else if (ticker === "VOO") entityName = "Vanguard S&P 500 ETF";
+                    else if (ticker === "IWM") entityName = "iShares Russell 2000 ETF";
+                    else entityName = ticker + " ETF";
+                }
+                
+                // Fetch price data
                 const quoteUrl = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${ticker}&apikey=${API_KEY}`;
                 const quoteResponse = await fetch(quoteUrl);
                 const quoteData = await quoteResponse.json();
                 
+                // If not identified as ETF yet, try to get company info
+                if (!isETF) {
+                    const overviewUrl = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${ticker}&apikey=${API_KEY}`;
+                    const overviewResponse = await fetch(overviewUrl);
+                    const overviewData = await overviewResponse.json();
+                    
+                    if (overviewData && overviewData.Name) {
+                        // It's a stock with company data
+                        entityName = overviewData.Name;
+                        symbolType = "stock";
+                    } else {
+                        // If no company data and not in ETF list, check if it still has price data
+                        // If it does, it might be an ETF we don't have in our list
+                        if (quoteData['Global Quote'] && quoteData['Global Quote']['05. price']) {
+                            symbolType = "etf";
+                            entityName = ticker + " ETF/Fund";
+                        } else {
+                            symbolType = "stock"; // Default to stock if we can't determine
+                        }
+                    }
+                }
+                
                 // Hide loading indicator
                 document.getElementById('loading').style.display = 'none';
                 
-                // Check if we got valid data
-                if (overviewData.Name && quoteData['Global Quote']) {
-                    const companyName = overviewData.Name;
+                // Check if we got valid price data
+                const hasValidQuote = quoteData['Global Quote'] && quoteData['Global Quote']['05. price'];
+                
+                if (hasValidQuote) {
                     const quote = quoteData['Global Quote'];
                     const price = parseFloat(quote['05. price']);
                     const change = parseFloat(quote['09. change']);
                     const changePercent = quote['10. change percent'].replace('%', '');
                     
-                    // Update company info display
-                    document.getElementById('companyName').textContent = companyName;
+                    // Update display with symbol type indicator
+                    const typeIndicator = symbolType ? 
+                        `<span class="symbol-type type-${symbolType}">${symbolType.toUpperCase()}</span>` : '';
+                    
+                    // Update company/ETF info display
+                    document.getElementById('companyName').innerHTML = `${entityName} (${ticker}) ${typeIndicator}`;
                     document.getElementById('currentPrice').textContent = `Current Price: $${price.toFixed(2)}`;
                     
                     const priceChangeElement = document.getElementById('priceChange');
@@ -311,32 +498,32 @@
                     const now = new Date();
                     document.getElementById('priceTimestamp').textContent = `As of ${now.toLocaleString()}`;
                     
-                    // Show company info
+                    // Show company/ETF info
                     document.getElementById('companyInfo').style.display = 'block';
                     
                     // Update the manual price input with the current price
                     document.getElementById('stockPrice').value = price.toFixed(2);
                 } else {
-                    alert('Could not find stock data for ticker: ' + ticker);
+                    alert(`Could not find market data for ${ticker}. Please check the symbol and try again.`);
                 }
             } catch (error) {
-                console.error('Error fetching stock data:', error);
+                console.error('Error fetching market data:', error);
                 document.getElementById('loading').style.display = 'none';
-                alert('Error fetching stock data. Please try again or enter the price manually.');
+                alert('Error fetching market data. Please try again or enter the price manually.');
             }
         }
         
         function simulateInvestment() {
-            // Get values
-            const ticker = document.getElementById('ticker').value.trim().toUpperCase() || 'Stock';
-            const companyName = document.getElementById('companyName').textContent || ticker;
+            // Get input values
+            const ticker = document.getElementById('ticker').value.trim().toUpperCase() || 'Symbol';
+            const companyInfo = document.getElementById('companyName').textContent || ticker;
             const currentPrice = parseFloat(document.getElementById('stockPrice').value);
             const investmentAmount = parseFloat(document.getElementById('investmentAmount').value);
             const targetProfit = parseFloat(document.getElementById('targetProfit').value) || 500;
             
             // Validate inputs
             if (isNaN(currentPrice) || currentPrice <= 0) {
-                alert('Please enter a valid stock price.');
+                alert('Please enter a valid current price.');
                 return;
             }
             
@@ -344,6 +531,12 @@
                 alert('Please enter a valid investment amount.');
                 return;
             }
+            
+            // Determine if we're dealing with ETF or stock based on context
+            const isETF = companyInfo.includes("ETF") || 
+                         document.querySelector('.type-etf') || 
+                         commonETFs.includes(ticker);
+            const securityType = isETF ? "units" : "shares";
             
             // Calculate values
             const shares = investmentAmount / currentPrice;
@@ -354,22 +547,22 @@
             // Display shares result prominently
             document.getElementById('sharesResult').innerHTML = `
                 With $${investmentAmount.toLocaleString()} at the current price of $${currentPrice.toFixed(2)},
-                you could buy <span class="highlight">${shares.toFixed(2)} shares</span> of ${companyName}.
+                you could buy <span class="highlight">${shares.toFixed(2)} ${securityType}</span> of ${ticker}.
             `;
             
             // Display simulation summary
             const summaryDiv = document.getElementById('simulationSummary');
             summaryDiv.innerHTML = `
-                <p><span class="metric">Stock:</span> ${companyName} (${ticker})</p>
+                <p><span class="metric">Symbol:</span> ${ticker}</p>
                 <p><span class="metric">Current Price:</span> $${currentPrice.toFixed(2)}</p>
                 <p><span class="metric">Investment Amount:</span> $${investmentAmount.toLocaleString()}</p>
-                <p><span class="metric">Shares You Could Buy:</span> ${shares.toFixed(2)}</p>
+                <p><span class="metric">${securityType.charAt(0).toUpperCase() + securityType.slice(1)} You Could Buy:</span> ${shares.toFixed(2)}</p>
                 <p><span class="metric">Target Profit:</span> $${targetProfit.toLocaleString()}</p>
                 <p><span class="metric">Required Price to Reach Target:</span> $${targetPrice.toFixed(2)}</p>
                 <p><span class="metric">Required Price Increase:</span> $${requiredPriceIncrease.toFixed(2)} (${priceIncreasePercent.toFixed(2)}%)</p>
             `;
             
-            // Create target table with different profit targets
+            // Generate target table with different profit targets
             const targetBody = document.getElementById('targetBody');
             targetBody.innerHTML = ''; // Clear previous results
             
@@ -407,7 +600,7 @@
             });
             
             // Show results
-            document.getElementById('simulationResults').style.display = 'block';
+            document.getElementById('results').style.display = 'block';
         }
         
         function resetForm() {
@@ -416,14 +609,14 @@
             document.getElementById('investmentAmount').value = '';
             document.getElementById('targetProfit').value = '';
             document.getElementById('companyInfo').style.display = 'none';
-            document.getElementById('simulationResults').style.display = 'none';
+            document.getElementById('results').style.display = 'none';
         }
         
         // Add event listener for Enter key on ticker input
         document.getElementById('ticker').addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
                 event.preventDefault();
-                fetchStockData();
+                fetchMarketData();
             }
         });
     </script>
